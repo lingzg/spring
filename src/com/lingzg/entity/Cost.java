@@ -103,4 +103,13 @@ public class Cost extends BaseEntity {
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+"{costId=" + costId + ", name=" + name + ", baseDuration=" + baseDuration + ", baseCost=" + baseCost
+				+ ", unitCost=" + unitCost + ", status=" + status + ", descr=" + descr + ", creatime=" + creatime
+				+ ", startime=" + startime + ", costType=" + costType + "}";
+	}
+	
+	
 }

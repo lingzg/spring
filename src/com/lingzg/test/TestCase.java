@@ -1,16 +1,20 @@
 package com.lingzg.test;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.lingzg.common.PageInfo;
 import com.lingzg.dao.CostDao;
 import com.lingzg.dao.EmpDao;
 import com.lingzg.entity.Cost;
 import com.lingzg.entity.Emp;
+import com.lingzg.util.StringUtil;
 
 public class TestCase {
 
@@ -44,7 +48,7 @@ public class TestCase {
 //		dao.save(c);
 	}
 	
-	@Test
+//	@Test
 	public void test2(){
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
 		EmpDao dao = ctx.getBean("empDao", EmpDao.class);
@@ -55,5 +59,17 @@ public class TestCase {
 		System.out.println("--------------");
 		Emp e = dao.get(1);
 		System.out.println(e.getEmpno() + " " + e.getEname());
+	}
+	
+	@Test
+	public void test3(){
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+		CostDao dao = ctx.getBean("costDao", CostDao.class);
+		PageInfo page = new PageInfo();
+		dao.findPageBySql(page,"select * from cost ",Cost.class);
+		System.out.println(page.getTotal());
+		System.out.println(page.getPageTotal());
+		System.out.println(page.getRows());
+		
 	}
 }

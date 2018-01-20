@@ -8,7 +8,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
+import com.lingzg.common.ColumnArrayRowMapper;
+import com.lingzg.common.ColumnMapRowMapper;
 import com.lingzg.common.EntityRowMapper;
 import com.lingzg.common.PageInfo;
 import com.lingzg.util.BeanUtil;
@@ -29,12 +32,8 @@ public abstract class JdbcBaseDao<E,PK extends Serializable> implements IBaseDao
 	@SuppressWarnings("unchecked")
 	public List<E> findAll() {
 		String sql = "select * from "+getTableName();
-		List<BaseEntity> list = getJdbcTemplate().query(sql, new EntityRowMapper(getEntityClass()));
-		List<E> result = new ArrayList<E>();
-		for(BaseEntity entity : list){
-			result.add((E) entity);
-		}
-		return result;
+		List<Object> list = getJdbcTemplate().query(sql, new EntityRowMapper(getEntityClass()));
+		return (List<E>) list;
 	}
 	
 	public List<E> findByProperty(String propertyName, Object value){
@@ -51,12 +50,8 @@ public abstract class JdbcBaseDao<E,PK extends Serializable> implements IBaseDao
 				sql.append(propertyNames[i]).append("=?");
 			}
 		}
-		List<BaseEntity> list = getJdbcTemplate().query(sql.toString(), new EntityRowMapper(getEntityClass()), values);
-		List<E> result = new ArrayList<E>();
-		for(BaseEntity entity : list){
-			result.add((E) entity);
-		}
-		return result;
+		List<Object> list = getJdbcTemplate().query(sql.toString(), new EntityRowMapper(getEntityClass()), values);
+		return (List<E>) list;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -118,22 +113,62 @@ public abstract class JdbcBaseDao<E,PK extends Serializable> implements IBaseDao
 		getJdbcTemplate().update(sql.toString(), params);
 	}
 	
-	public List<?> findListBySql(String sql,Object[] params,Class<?> clazz){
-		return null;
+	public List<?> findListBySql(String sql, Class<?> clazz, Object... params){
+		return getJdbcTemplate().query(sql, new EntityRowMapper(clazz), params);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<E> findEntityListBySql(String sql,Object... params){
+		return (List<E>) getJdbcTemplate().query(sql, new EntityRowMapper(getEntityClass()), params);
 	}
 	
 	public List<?> findListBySql(String sql,Object... params){
-		return null;
+		return getJdbcTemplate().query(sql, new ColumnArrayRowMapper(), params);
 	}
 	
 	public List<Map<String, Object>> findMapListBySql(String sql,Object... params){
-		return null;
+		return getJdbcTemplate().query(sql, new ColumnMapRowMapper(), params);
+	}
+	
+	public List<Map<String, Object>> findMapListBySql2(String sql,Object... params){
+		return getJdbcTemplate().query(sql, new ColumnMapRowMapper(ColumnMapRowMapper.CAMEL_CASE), params);
+	}
+	
+	public List<Map<String, Object>> findMapListBySql3(String sql,Object... params){
+		return getJdbcTemplate().query(sql, new ColumnMapRowMapper(ColumnMapRowMapper.FIRST_LOWER_CASE), params);
 	}
 				
+	public void findPageBySql(PageInfo page, String sql, RowMapper<?> mapper, Object... params){
+		String countSql = "select count(1) from("+sql+")tcont";
+		long count = getJdbcTemplate().queryForObject(countSql, Long.class, params);
+		page.setTotal(count);
+		int start = page.getStartRow();
+		int end = start + page.getPageSize();
+		//mysql
+		sql += "limit "+start+","+end;
+		//oracle
+		//sql="SELECT * FROM (SELECT tn.*,ROWNUM AS rowno FROM ("+sql+") tn WHERE ROWNUM <= "+end+") tw WHERE tw.rowno >= "+start;
+		System.out.println(sql);
+		List<?> rows = getJdbcTemplate().query(sql, mapper, params);
+		page.setRows(rows);
+	}
+	
 	public void findPageBySql(PageInfo page, String sql, Object... params){
-		
+		findPageBySql(page, sql, new ColumnMapRowMapper(), params);
 	}
-				
+	
+	public void findPageBySql2(PageInfo page, String sql, Object... params){
+		findPageBySql(page, sql, new ColumnMapRowMapper(ColumnMapRowMapper.CAMEL_CASE), params);
+	}
+	
+	public void findPageBySql3(PageInfo page, String sql, Object... params){
+		findPageBySql(page, sql, new ColumnMapRowMapper(ColumnMapRowMapper.FIRST_LOWER_CASE), params);
+	}
+	
+	public void findPageBySql(PageInfo page, String sql, Class<?> clazz, Object... params){
+		findPageBySql(page, sql, new EntityRowMapper(clazz), params);
+	}
+	
 	public boolean executeSql(String sql, Object... params){
 		getJdbcTemplate().update(sql, params);
 		return true;

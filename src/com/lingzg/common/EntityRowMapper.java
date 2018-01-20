@@ -7,10 +7,9 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 
-import com.lingzg.base.BaseEntity;
 import com.lingzg.util.BeanUtil;
 
-public class EntityRowMapper implements RowMapper<BaseEntity> {
+public class EntityRowMapper implements RowMapper<Object> {
 
 	private Class<?> clazz;
 
@@ -19,12 +18,12 @@ public class EntityRowMapper implements RowMapper<BaseEntity> {
 	}
 
 	@Override
-	public BaseEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnCount = rsmd.getColumnCount();
-		BaseEntity bean = null;
+		Object bean = null;
 		try {
-			bean = (BaseEntity) clazz.newInstance();
+			bean = clazz.newInstance();
 			for (int i = 1; i <= columnCount; i++) {
 				String key = getColumnKey(rsmd.getColumnName(i));
 				Object obj = getColumnValue(rs, i);
