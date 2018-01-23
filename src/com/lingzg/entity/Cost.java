@@ -1,6 +1,7 @@
 package com.lingzg.entity;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import com.lingzg.base.BaseEntity;
 
@@ -15,8 +16,8 @@ public class Cost extends BaseEntity {
 	private Double unitCost; //单位费用
 	private String status; //状态：0-开通，1-暂停
 	private String descr; //描述
-	private Timestamp creatime; //创建时间
-	private Timestamp startime; //开通时间
+	private Date creatime; //创建时间
+	private Date startime; //开通时间
 	private String costType; //资费类型：1-包月，2-套餐，3-计时
 	
 	public Integer getCostId() {
@@ -61,16 +62,16 @@ public class Cost extends BaseEntity {
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}
-	public Timestamp getCreatime() {
+	public Date getCreatime() {
 		return creatime;
 	}
-	public void setCreatime(Timestamp creatime) {
+	public void setCreatime(Date creatime) {
 		this.creatime = creatime;
 	}
-	public Timestamp getStartime() {
+	public Date getStartime() {
 		return startime;
 	}
-	public void setStartime(Timestamp startime) {
+	public void setStartime(Date startime) {
 		this.startime = startime;
 	}
 	public String getCostType() {
