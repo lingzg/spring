@@ -1,4 +1,4 @@
-package com.cecsys.secmax.job;
+package com.lingzg.job;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
