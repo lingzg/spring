@@ -24,7 +24,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
  * @author lingzg
  * 
  */
-public class QuartzManager {
+public class SpringQuartzManager {
 
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
