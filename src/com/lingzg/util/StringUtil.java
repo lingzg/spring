@@ -21,8 +21,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -30,6 +28,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+
+import net.sf.json.JSONObject;
 
 
 
@@ -1166,6 +1166,23 @@ public class StringUtil {
 	
     public static String toCamelCase(String str){
     	return toCamelCase(str, "_");
+    }
+    
+    public static String toStartWithLowerCase(String str){
+    	if(str == null){
+    		return str;
+    	}
+    	int len = str.length();
+		int index=0;
+		while(index<len&&Character.isUpperCase(str.charAt(index))){
+			String newstr = str.substring(0,index)+Character.toLowerCase(str.charAt(index));
+			if(index+1<len){
+				newstr += str.substring(index+1);
+			}
+			str = newstr;
+			index++;
+		}
+    	return str;
     }
 
 	public static String trim(String name) {

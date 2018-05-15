@@ -1,16 +1,11 @@
 package com.lingzg.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
 import com.lingzg.base.BaseService;
 import com.lingzg.base.IBaseDao;
-import com.lingzg.common.PageInfo;
-import com.lingzg.common.ParamsTable;
 import com.lingzg.dao.EmpDao;
 import com.lingzg.entity.Emp;
 
@@ -25,11 +20,4 @@ public class EmpService extends BaseService<Emp, Integer>{
 		return dao;
 	}
 	
-	public PageInfo findPage(ParamsTable pt){
-		PageInfo page = new PageInfo(pt);
-		String sql="select * from t_emp";
-		List<Object> params = new ArrayList<Object>();
-		dao.findPageBySql(page,sql,params.toArray());
-		return page;
-	}
 }

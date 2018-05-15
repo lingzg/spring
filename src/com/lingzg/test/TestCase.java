@@ -1,9 +1,6 @@
 package com.lingzg.test;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +11,6 @@ import com.lingzg.dao.CostDao;
 import com.lingzg.dao.EmpDao;
 import com.lingzg.entity.Cost;
 import com.lingzg.entity.Emp;
-import com.lingzg.util.StringUtil;
 
 public class TestCase {
 
